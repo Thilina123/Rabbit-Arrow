@@ -4,6 +4,7 @@ using System.Collections;
 public class Rabit : MonoBehaviour {
 
 	public GameObject idle,left,right,bullet,retry;
+	public int freezeTime=5;
 	public Animator killAnim;
 	public float range=6.5f;
 	public float speed=.1f;
@@ -77,6 +78,18 @@ public class Rabit : MonoBehaviour {
 			Rabit.maxBullets=3;
 			Destroy(col.gameObject);
 		}
+		if (col.gameObject.tag=="freezer") {
+			if(!Ball.frozen){
+				StartCoroutine(Freeze());
+				Destroy(col.gameObject);
+			}
+		}
 	}
 	
+	IEnumerator Freeze() {
+		Ball.Freeze ();
+		yield return new WaitForSeconds(freezeTime);
+		print("WaitAndPrint " + Time.time);
+		Ball.UnFreeze ();
+	}
 }

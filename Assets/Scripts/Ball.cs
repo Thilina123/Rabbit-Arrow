@@ -4,6 +4,7 @@ using System.Collections;
 public class Ball : MonoBehaviour {
 
 	public int devider=0;
+	public static bool frozen=false;
 	public GameObject ball;
 	void Start () {
 		
@@ -13,7 +14,17 @@ public class Ball : MonoBehaviour {
 	void Update(){
 		if (Input.GetKeyDown (KeyCode.A)) {
 			Devide();
-				}
+		}
+		if (frozen && rigidbody.constraints!=RigidbodyConstraints.FreezeAll) {
+			//			rigidbody.isKinematic=true;
+			rigidbody.constraints=RigidbodyConstraints.FreezeAll;
+			//			Debug.Log("freezed");
+		}
+		if (!frozen && rigidbody.constraints==RigidbodyConstraints.FreezeAll) {
+			//			rigidbody.isKinematic=false;
+			rigidbody.constraints=RigidbodyConstraints.FreezePositionZ;
+			Debug.Log("unfreezed");
+		}
 	}
 	
 	// Update is called once per frame
@@ -27,7 +38,14 @@ public class Ball : MonoBehaviour {
 			col.gameObject.GetComponent<Rabit>().HitRabbit();
 		}
 	}
+	public static void Freeze(){
+		frozen = true;
+	}
+	public static void UnFreeze(){
+		frozen = false;
+	}
 	void Devide(){
+		Debug.Log ("devide");
 		devider++;
 		if (devider>2) {
 			Destroy(gameObject);
