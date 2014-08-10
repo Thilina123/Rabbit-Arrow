@@ -45,13 +45,14 @@ public class Ball : MonoBehaviour {
 		frozen = false;
 	}
 	void Devide(){
-		Debug.Log ("devide");
+		Debug.Log ("devide "+devider);
 		devider++;
 		if (devider>2) {
 			Destroy(gameObject);
 			return;
 				}
 		GameObject b1=(GameObject)Instantiate(ball,transform.position,transform.rotation);
+		b1.transform.Translate (Vector3.right);
 //		GameObject b2=(GameObject)Instantiate(ball,transform.position,transform.rotation);
 
 		b1.GetComponent<Ball>().devider=devider;

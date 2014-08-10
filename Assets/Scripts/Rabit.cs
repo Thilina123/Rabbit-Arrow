@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Rabit : MonoBehaviour {
 
-	public GameObject idle,left,right,bullet,retry;
+	public GameObject idle,left,right,bullet,chainBullet,retry;
 	public int freezeTime=5;
 	public Animator killAnim;
 	public float range=6.5f;
@@ -11,9 +11,11 @@ public class Rabit : MonoBehaviour {
 	public static int bulletCount=0,maxBullets=1;
 	bool hit=false;
 	GameObject obj;
+	GameObject currentBullet;
 	void Start () {
 		bulletCount = 0;
 		maxBullets = 1;
+		currentBullet = bullet;
 	}
 	
 	// Update is called once per frame
@@ -65,7 +67,7 @@ public class Rabit : MonoBehaviour {
 		if (maxBullets>1) {
 			maxBullets--;			
 				}
-		obj =(GameObject)Instantiate(bullet,transform.position,Quaternion.identity);
+		obj =(GameObject)Instantiate(currentBullet,transform.position,Quaternion.identity);
 	}
 	public void HitRabbit(){
 		hit=true;
@@ -76,13 +78,21 @@ public class Rabit : MonoBehaviour {
 	void OnCollisionEnter (Collision col) {
 		if (col.gameObject.tag=="double arrow") {
 			Rabit.maxBullets=3;
+			ResetBullets();
 			Destroy(col.gameObject);
 		}
 		if (col.gameObject.tag=="freezer") {
 			if(!Ball.frozen){
 				StartCoroutine(Freeze());
 				Destroy(col.gameObject);
+				ResetBullets();
 			}
+		}
+		if (col.gameObject.tag=="chain") {
+			Rabit.maxBullets=3;
+			currentBullet=chainBullet;
+			Destroy(col.gameObject);
+
 		}
 	}
 	
@@ -91,5 +101,8 @@ public class Rabit : MonoBehaviour {
 		yield return new WaitForSeconds(freezeTime);
 		print("WaitAndPrint " + Time.time);
 		Ball.UnFreeze ();
+	}
+	void ResetBullets(){
+		currentBullet = bullet;
 	}
 }
